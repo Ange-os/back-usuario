@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .models import Users
 from rest_framework import status
-from .serializers import UserSerializer, PasswordResetSerializer
+from .serializers import UserSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
@@ -27,3 +27,14 @@ class PasswordResetResquestview(generics.GenericAPIView):
             serializer.save()
             return Response({"message": "password reset link sent"}, status=200)
         return Response(serializer.errors, status=400)
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetConfirmSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    

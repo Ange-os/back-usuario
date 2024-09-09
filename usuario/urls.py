@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.contrib.auth import views as auth_views
-from .views import UserListCreateAPIView, PasswordResetResquestview
+from .views import UserListCreateAPIView, PasswordResetResquestview, PasswordResetConfirmView
 
 urlpatterns = [
     path('users/', UserListCreateAPIView.as_view(), name='user-list-create'),
@@ -28,5 +28,8 @@ urlpatterns = [
     # URL que confirma el restablecimiento exitoso de la contraseña
     path('password-reset-complete/', 
         auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), 
-        name='password_reset_complete'),   
+        name='password_reset_complete'),
+
+    path('password-reset-confirm/', 
+        PasswordResetConfirmView.as_view(), name='password-reset-confirm'),   
 ]
