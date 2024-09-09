@@ -1,7 +1,11 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from .models import Users
-from .serializers import UserSerializer
+from rest_framework import status
+from .serializers import UserSerializer, PasswordResetSerializer
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 class UserListCreateAPIView(generics.ListCreateAPIView):
     queryset = Users.objects.all()
@@ -12,3 +16,14 @@ class UserListCreateAPIView(generics.ListCreateAPIView):
         if self.request.method == 'POST':
             return [AllowAny()]  # Permite que cualquier usuario cree un usuario
         return [IsAuthenticated()]  
+
+class PasswordResetResquestview(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PasswordResetSerializer
+    @method_decorator(csrf_exempt)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "password reset link sent"}, status=200)
+        return Response(serializer.errors, status=400)
