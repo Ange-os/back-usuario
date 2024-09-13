@@ -17,6 +17,14 @@ class UserListCreateAPIView(generics.ListCreateAPIView):
             return [AllowAny()]  # Permite que cualquier usuario cree un usuario
         return [IsAuthenticated()]  
 
+class UserProfileAPIView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    # Sobrescribimos el método get_object para devolver el usuario autenticado
+    def get_object(self):
+        return self.request.user
+
 class PasswordResetResquestview(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = PasswordResetSerializer

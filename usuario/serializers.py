@@ -10,7 +10,10 @@ from django.contrib.auth.tokens import default_token_generator
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ['username', 'email', 'password']
+        fields = ['username','password', 'email', 'date_joined', 'last_login']
+        extra_kwargs = {
+            'password': {'write_only': True}  # Solo se puede escribir, no leer
+        }
 
     def create(self, validated_data):
         user = Users(

@@ -4,10 +4,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.contrib.auth import views as auth_views
-from .views import UserListCreateAPIView, PasswordResetResquestview, PasswordResetConfirmView
+from .views import UserListCreateAPIView, PasswordResetResquestview, PasswordResetConfirmView, UserProfileAPIView
 
 urlpatterns = [
     path('users/', UserListCreateAPIView.as_view(), name='user-list-create'),
+    path('profile/', UserProfileAPIView.as_view(), name='user-profile'),
     #LOGIN
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
